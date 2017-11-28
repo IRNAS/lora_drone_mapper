@@ -1,0 +1,3 @@
+[submodule "RN2483-Arduino-Library"]
+	path = RN2483-Arduino-Library
+	url = https://github.com/jpmeijers/RN2483-Arduino-Library.git
