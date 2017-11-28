@@ -1,8 +1,8 @@
 # LoRa Drone Mapper 
 
-The perpous of the LoRa Drone Mapper is to map the signal strength of LoRa signal. 
+The purpose of the LoRa Drone Mapper is to map the signal strength of LoRa signal.
 
-Mapping device is atteched to the drone and it is sending the mapping data to the TheThingsNetwork and to second node for local mapping. The setup is shown on picture. 
+Mapping device is attached to the drone and it is sending the mapping data to the TheThingsNetwork and to the second node for local mapping. The setup is shown in picture
 
 ![diagram](https://github.com/IRNAS/lora_drone_mapper/blob/master/pics/mapping_setup.png)
 
