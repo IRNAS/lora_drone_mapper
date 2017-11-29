@@ -21,4 +21,4 @@ void LORA_Write(char* Data);
 void waitTillMessageGone(void);
 void StartLoraRead(void);
 int LORA_Read(char* Data);
-
+int getSNR(void);

@@ -144,3 +144,13 @@ int LORA_Read(char* Data)
 
 	return (messageFlag);
 }
+
+int getSNR(void)
+{
+  String snr;
+  delay(100);
+  LORA_STREAM.print(F("radio get snr"));
+  snr = LORA_STREAM.readStringUntil('\n');
+  snr.trim();
+  return snr.toInt();
+}
