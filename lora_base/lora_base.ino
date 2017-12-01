@@ -58,8 +58,9 @@ void loop()
 
 		}
 		else
-			CONSOLE_STREAM.print("Error: ");
-			CONSOLE_STREAM.println(errorCode);
+      CONSOLE_STREAM.println('.');
+//			CONSOLE_STREAM.print("Error: ");
+//			CONSOLE_STREAM.println(errorCode);
 	}
 
 }
@@ -83,7 +84,7 @@ void decode_and_send_msg(char *data){
   lat = (float)atof(lat_char);   
   lon = (float)atof(lon_char);
   alti = (float)atof(alti_char);                             // convert it to float
-  lat = lat / 10000; lon = lon / 10000; alti = alti / 10000; speed = speed / 10000;           // divide it
+  lat = lat / 100000; lon = lon / 100000; alti = alti / 100000; //speed = speed / 10000;           // divide it
 
   snr = getSNR();
 
@@ -94,7 +95,7 @@ void decode_and_send_msg(char *data){
   CONSOLE_STREAM.print(',');
   CONSOLE_STREAM.print(alti, 10);
   CONSOLE_STREAM.print(',');
-  CONSOLE_STREAM.print(snr,  10);
+  CONSOLE_STREAM.print(snr);
   CONSOLE_STREAM.println();
   
 }
