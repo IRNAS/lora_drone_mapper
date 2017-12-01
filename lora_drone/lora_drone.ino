@@ -17,8 +17,6 @@ rn2xx3 myLora(Serial1);
 String toLog;
 /**/
 
-bool find_fix(uint32_t delay_until);
-void do_flash_led(int pin);
 
 long lat = 0;
 long lon = 0;
@@ -35,6 +33,13 @@ char char_conv_t[9];
 String str_conv_a;
 String str_conv_o;
 String str_conv_t;
+
+void lora_send_gps_data(void);
+bool find_fix(uint32_t);
+void do_flash_led(int);
+void ttn_setup(void);
+void ttn_send(void);
+
 
 void setup() {
   
@@ -77,25 +82,25 @@ void setup() {
 
 void loop() {
 
-  // put your main code here, to run repeatedly:
-  if (millis() - previousMillis > interval){
-    previousMillis = millis();
+  /* if sending is too fast for TTN uncoment lines */
+//  if (millis() - previousMillis > interval){
+//    previousMillis = millis();
   
     if (find_fix(0)){
       /* blink led */
       do_flash_led(LED_RED);
       /* Send loara data */
       LoraP2P_Setup();
-      lora_send_gps_data();  
+      lora_send_gps_data(); 
 
       /* Send data to TTN */
       ttn_setup();
       ttn_send();
-    }
-  }else{
-    /* send no data over Lora */
-    
-  }
+//    }
+//  }else{
+//    /* send no data over Lora */
+//    
+   }
 }
 
 
@@ -147,23 +152,22 @@ void lora_send_gps_data(void){
 /*!
  * Find a GPS fix, but first wait a while
  */
-bool find_fix(uint32_t delay_until)
-{
-    MySerial.println(String("delay ... ") + delay_until + String("ms"));
-    delay(delay_until);
+bool find_fix(uint32_t delay_until){
+    //MySerial.println(String("delay ... ") + delay_until + String("ms"));
+    //delay(delay_until);
 
     uint32_t start = millis();
-    uint32_t timeout = 50000L * 1;
-    MySerial.println(String("waiting for fix ..., timeout=") + timeout + String("ms"));
-    if (sodaq_gps.scan(true, timeout)) {
+    //uint32_t timeout = 50000L * 1;
+    //MySerial.println(String("waiting for fix ..., timeout=") + timeout + String("ms"));
+    if (sodaq_gps.scan(true)) {
         MySerial.println(String(" time to find fix: ") + (millis() - start) + String("ms"));
         MySerial.println(String(" datetime = ") + sodaq_gps.getDateTimeString());
         MySerial.println(String(" lat = ") + String(sodaq_gps.getLat(), 7));
-        lat = long(sodaq_gps.getLat() * 10000000);
+        lat = long(sodaq_gps.getLat() * 1000000);
         MySerial.println(String(" lon = ") + String(sodaq_gps.getLon(), 7));
-        lon = long(sodaq_gps.getLon() * 10000000);
+        lon = long(sodaq_gps.getLon() * 1000000);
         MySerial.println(String(" alt = ") + String(sodaq_gps.getAlt(), 7));
-        alt = long(sodaq_gps.getAlt() * 10000000);
+        alt = long(sodaq_gps.getAlt() * 1000000);
         MySerial.println(String(" num sats = ") + String(sodaq_gps.getNumberOfSatellites()));
         return true;
     } else {
@@ -191,23 +195,23 @@ void ttn_setup(void){
     delay(10000);
     hweui = myLora.hweui();
   }
-  SerialUSB.println("RN2xx3 firmware version:");
-  SerialUSB.println(myLora.sysver());
+//  SerialUSB.println("RN2xx3 firmware version:");
+//  SerialUSB.println(myLora.sysver());
   
   bool join_result = false;
 
   //ABP: initABP(String addr, String AppSKey, String NwkSKey);
   join_result = myLora.initABP("26011FE5", "657FE762E8328542BAF3CBB71A949593", "92DB6FCF4592986E0F26B60CD3117ED2");
 
-  while(!join_result)
-  {
-    SerialUSB.println("Unable to join. Are your keys correct, and do you have TTN coverage?");
-    delay(60000); //delay a minute before retry
-    digitalWrite(LED_BLUE, LOW);
-    join_result = myLora.init();
-    digitalWrite(LED_BLUE, HIGH);
-  }
-  SerialUSB.println("Successfully joined TTN");
+//  while(!join_result)
+//  {
+//    SerialUSB.println("Unable to join. Are your keys correct, and do you have TTN coverage?");
+//    delay(60000); //delay a minute before retry
+//    digitalWrite(LED_BLUE, LOW);
+//    join_result = myLora.init();
+//    digitalWrite(LED_BLUE, HIGH);
+//  }
+//  SerialUSB.println("Successfully joined TTN");
 }
 
 void ttn_send(void){
