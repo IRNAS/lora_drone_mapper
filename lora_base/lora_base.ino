@@ -95,7 +95,11 @@ void decode_and_send_msg(char *data){
   CONSOLE_STREAM.print(',');
   CONSOLE_STREAM.print(alti, 10);
   CONSOLE_STREAM.print(',');
-  CONSOLE_STREAM.print(snr);
+  CONSOLE_STREAM.print(0, 10);//speed
+  CONSOLE_STREAM.print(',');
+  CONSOLE_STREAM.print(0, 10);//rssi
+  CONSOLE_STREAM.print(',');
+  CONSOLE_STREAM.print(snr, 10);
   CONSOLE_STREAM.println();
   
 }
