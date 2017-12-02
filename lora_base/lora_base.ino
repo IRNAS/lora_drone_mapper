@@ -53,7 +53,7 @@ void loop()
 			LED_Flag = !LED_Flag;
 			digitalWrite(LED_GREEN, LED_Flag); // Change LED if there is a message
       /* decode msg */
-			//CONSOLE_STREAM.println(msg);
+			CONSOLE_STREAM.println(msg);
       decode_and_send_msg(msg);
 
 		}
