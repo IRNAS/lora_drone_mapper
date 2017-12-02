@@ -13,7 +13,7 @@ unsigned long readDelay = 2000; // Time to read for messages in ms (max 42949672
 const char CR = '\r';
 const char LF = '\n';
 
-#define DEBUG
+//#define DEBUG
 
 
 // Configuring the RN2483 for P2P

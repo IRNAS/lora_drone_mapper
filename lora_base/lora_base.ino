@@ -39,7 +39,7 @@ void loop()
 
 	if (send_Flag == 1) {
 		send_Flag = 0;
-		CONSOLE_STREAM.println("Sending Message...");
+		//CONSOLE_STREAM.println("Sending Message...");
 		LORA_Write("10");
 		delay(1000);
 	}
@@ -57,10 +57,6 @@ void loop()
       decode_and_send_msg(msg);
 
 		}
-		else
-      CONSOLE_STREAM.println('.');
-//			CONSOLE_STREAM.print("Error: ");
-//			CONSOLE_STREAM.println(errorCode);
 	}
 
 }
@@ -84,9 +80,9 @@ void decode_and_send_msg(char *data){
   lat = (float)atof(lat_char);   
   lon = (float)atof(lon_char);
   alti = (float)atof(alti_char);                             // convert it to float
-  lat = lat / 100000; lon = lon / 100000; alti = alti / 100000; //speed = speed / 10000;           // divide it
+  lat = lat / 1000000; lon = lon / 1000000; alti = alti / 100000; //speed = speed / 10000;           // divide it
 
-  snr = getSNR();
+  //snr = getSNR();
 
  // debug printing with 10 decimal points
   CONSOLE_STREAM.print(lat,  10);

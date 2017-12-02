@@ -13,11 +13,6 @@
 //giving the software serial as port to use
 rn2xx3 myLora(Serial1);
 
-
-String toLog;
-/**/
-
-
 long lat = 0;
 long lon = 0;
 long alt = 0;
@@ -34,6 +29,13 @@ String str_conv_a;
 String str_conv_o;
 String str_conv_t;
 
+String toLog;
+uint8_t txBuffer[9];
+uint32_t LatitudeBinary, LongitudeBinary;
+uint16_t altitudeGps;
+uint8_t hdopGps;
+int dr = 0;
+
 void lora_send_gps_data(void);
 bool find_fix(uint32_t);
 void do_flash_led(int);
@@ -41,13 +43,15 @@ void ttn_setup(void);
 void ttn_send(void);
 
 
+
+
 void setup() {
   
   /* Init serial */
   delay(3000);
-  while (!SerialUSB) {
-      // Wait for USB to connect
-  }
+  // make sure usb serial connection is available,
+  // or after 10s go on anyway for 'headless' use of the node.
+  while ((!SerialUSB) && (millis() < 10000));
 
   MySerial.begin(57600);
   //test_function(); while(1);
@@ -81,6 +85,7 @@ void setup() {
 }
 
 void loop() {
+  do_flash_led(LED_RED);
 
   /* if sending is too fast for TTN uncoment lines */
 //  if (millis() - previousMillis > interval){
@@ -201,7 +206,7 @@ void ttn_setup(void){
   bool join_result = false;
 
   //ABP: initABP(String addr, String AppSKey, String NwkSKey);
-  join_result = myLora.initABP("26011FE5", "657FE762E8328542BAF3CBB71A949593", "92DB6FCF4592986E0F26B60CD3117ED2");
+  join_result = myLora.initABP("26011AA1", "4B4D878F6DCE8E592169D2AA0D111EC6", "0172714C95D54A931C9C778DF5362DBD");
 
 //  while(!join_result)
 //  {
@@ -215,19 +220,53 @@ void ttn_setup(void){
 }
 
 void ttn_send(void){
-  
-  toLog = String(long(sodaq_gps.getLat()*1000000));
-  toLog +=" ";
-  toLog += String(long(sodaq_gps.getLon()*1000000));
-  toLog+=" ";
-  toLog+=String(int(sodaq_gps.getAlt()));
-  toLog+=" ";
-  toLog+=String(int(sodaq_gps.getHDOP()*100));
-  
+  LatitudeBinary = ((sodaq_gps.getLat() + 90) / 180) * 16777215;
+  LongitudeBinary = ((sodaq_gps.getLon() + 180) / 360) * 16777215;
+
+  txBuffer[0] = ( LatitudeBinary >> 16 ) & 0xFF;
+  txBuffer[1] = ( LatitudeBinary >> 8 ) & 0xFF;
+  txBuffer[2] = LatitudeBinary & 0xFF;
+
+  txBuffer[3] = ( LongitudeBinary >> 16 ) & 0xFF;
+  txBuffer[4] = ( LongitudeBinary >> 8 ) & 0xFF;
+  txBuffer[5] = LongitudeBinary & 0xFF;
+
+  altitudeGps = sodaq_gps.getAlt();
+  txBuffer[6] = ( altitudeGps >> 8 ) & 0xFF;
+  txBuffer[7] = altitudeGps & 0xFF;
+
+  hdopGps = sodaq_gps.getHDOP()*10;
+  txBuffer[8] = hdopGps & 0xFF;
+
+  toLog = "";
+  for(size_t i = 0; i<sizeof(txBuffer); i++)
+  {
+    char buffer[3];
+    sprintf(buffer, "%02x", txBuffer[i]);
+    toLog = toLog + String(buffer);
+  }
+
+  SerialUSB.print("Transmit on DR");
+  SerialUSB.print(dr);
+  SerialUSB.print(" coordinates ");
+  SerialUSB.print(sodaq_gps.getLat(), 13);
+  SerialUSB.print(" ");
+  SerialUSB.print(sodaq_gps.getLon(), 13);
+  SerialUSB.print(" altitude ");
+  SerialUSB.print(sodaq_gps.getAlt(), 1);
+  SerialUSB.print(" and HDOP ");
+  SerialUSB.print(sodaq_gps.getHDOP(), 2);
+  SerialUSB.print(" hex ");
   SerialUSB.println(toLog);
+
   digitalWrite(LED_BLUE, LOW);
-  myLora.tx(toLog);
+  myLora.txBytes(txBuffer, sizeof(txBuffer));
   digitalWrite(LED_BLUE, HIGH);
+
+  // Cycle between datarate 0 and 5
+  //dr = (dr + 1) % 6;
+  //myLora.setDR(dr);
+
   SerialUSB.println("TX done");
 }
 
