@@ -105,7 +105,7 @@ int LORA_Read(char* Data)
 	String errorStr = "radio_err";
 	String Buffer = "";
 
-	StartLoraRead();
+	//StartLoraRead();
 
 	while (messageFlag == 0) // As long as there is no message
 	{
