@@ -142,7 +142,7 @@ void loop() {
       SerialUSB.println("TX done");
 
       LoraP2P_Setup();
-      LORA_Write(txBuffer);
+      LORA_Write((char*)txBuffer);
       SerialUSB.println("LORA TX done");
 
       /* Send data to TTN */
@@ -190,6 +190,8 @@ void do_flash_led(int pin){
 }
 
 void ttn_setup(void){
+  //print out the HWEUI so that we can register it via ttnctl
+  String hweui = myLora.hweui();
   while(hweui.length() != 16)
   {
     SerialUSB.println("Communication with RN2xx3 unsuccessful. Power cycle the Sodaq One board.");
