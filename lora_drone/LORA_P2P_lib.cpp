@@ -7,7 +7,7 @@
 
 int8_t trPower = 1;         // Transreceiver power  ( can be -3 to 15)
 String SprFactor = "sf9";  // Spreadingsfactor     (can be sf7 to sf12)
-uint8_t max_dataSize = 100; // Maximum charcount to avoid writing outside of string
+uint8_t max_dataSize = 200; // Maximum charcount to avoid writing outside of string
 unsigned long readDelay = 2000; // Time to read for messages in ms (max 4294967295 ms, 0 to disable)
 
 const char CR = '\r';
@@ -15,6 +15,7 @@ const char LF = '\n';
 
 #define DEBUG
 
+SoftwareSerial LORA_STREAM(10, 11); //RX, TX
 
 // Configuring the RN2483 for P2P
 void LoraP2P_Setup()

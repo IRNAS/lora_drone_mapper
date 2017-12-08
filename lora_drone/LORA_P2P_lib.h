@@ -8,17 +8,19 @@
 #else
 	#include "WProgram.h"
 #endif
+#include <SoftwareSerial.h>
+/**/
 
 
+extern SoftwareSerial LORA_STREAM; //RX, TX
 
-#endif
 
-#define LORA_STREAM Serial1
-#define CONSOLE_STREAM SerialUSB
+//#define LORA_STREAM Serial1
+#define CONSOLE_STREAM Serial
 void LoraP2P_Setup(void);
 void FlushSerialBufferIn(void);
 void LORA_Write(char* Data);
 void waitTillMessageGone(void);
 void StartLoraRead(void);
 int LORA_Read(char* Data);
-
+#endif
