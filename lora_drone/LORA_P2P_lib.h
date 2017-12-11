@@ -11,11 +11,8 @@
 #include <SoftwareSerial.h>
 /**/
 
-
 extern SoftwareSerial LORA_STREAM; //RX, TX
 
-
-//#define LORA_STREAM Serial1
 #define CONSOLE_STREAM Serial
 void LoraP2P_Setup(void);
 void FlushSerialBufferIn(void);

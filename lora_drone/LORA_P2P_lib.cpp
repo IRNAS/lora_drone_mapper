@@ -1,14 +1,9 @@
-// 
-// 
-// 
-
 #include "LORA_P2P_lib.h"
 
-
-int8_t trPower = 1;         // Transreceiver power  ( can be -3 to 15)
-String SprFactor = "sf9";  // Spreadingsfactor     (can be sf7 to sf12)
-uint8_t max_dataSize = 200; // Maximum charcount to avoid writing outside of string
-unsigned long readDelay = 2000; // Time to read for messages in ms (max 4294967295 ms, 0 to disable)
+int8_t trPower = 1;              // Transreceiver power  ( can be -3 to 15)
+String SprFactor = "sf9";        // Spreadingsfactor     (can be sf7 to sf12)
+uint8_t max_dataSize = 200;      // Maximum charcount to avoid writing outside of string
+unsigned long readDelay = 2000;  // Time to read for messages in ms (max 4294967295 ms, 0 to disable)
 
 const char CR = '\r';
 const char LF = '\n';
@@ -57,21 +52,21 @@ void FlushSerialBufferIn()
 void LORA_Write(char* Data)
 {
 	LORA_STREAM.print("radio tx ");
-	LORA_STREAM.print(Data);
+  LORA_STREAM.print(Data);
 	LORA_STREAM.print("\r\n");
 	LORA_STREAM.flush();
-
 	waitTillMessageGone();
-
 }
 
 // Waits until the data transmit is done
 void waitTillMessageGone()
 {
-	while (!LORA_STREAM.available());
-	delay(10);
+	//while (!LORA_STREAM.available());
+	//delay(10);
 	while (LORA_STREAM.available() > 0)
+  {
 		LORA_STREAM.read();
+  }
 
 	while (!LORA_STREAM.available());
 	delay(10);
@@ -114,7 +109,7 @@ int LORA_Read(char* Data)
 
 		delay(50);  // Some time for the buffer to fill
 
-					// Read message from RN2483 LORA chip
+		// Read message from RN2483 LORA chip
 		while (LORA_STREAM.available() > 0 && LORA_STREAM.peek() != LF)
 		{
 			Buffer += (char)LORA_STREAM.read();

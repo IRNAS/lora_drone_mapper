@@ -29,7 +29,7 @@ String str_conv_o;
 String str_conv_t;
 
 String toLog;
-uint8_t txBuffer[9];
+char txBuffer[30] = "12345678910111213141516171819";
 uint32_t LatitudeBinary, LongitudeBinary;
 uint16_t altitudeGps;
 uint8_t hdopGps;
@@ -68,20 +68,18 @@ void setup() {
 }
 
 void loop() {
-
-  
    
-//    LoraP2P_Setup();
-//    LORA_Write((char*)txBuffer);
-//    CONSOLE_STREAM.println("LORA TX done");
-
+    LoraP2P_Setup();
+    //LORA_Write((char *)txBuffer);
+    LORA_Write(txBuffer);
+    CONSOLE_STREAM.println("LORA TX done");
+    //delay(2000);
     /* Send data to TTN */
     ttn_setup();
-    myLora.txBytes(txBuffer, sizeof(txBuffer));
+    myLora.txBytes((uint8_t *)txBuffer, sizeof(txBuffer));
     CONSOLE_STREAM.println("TTN TX done");
 
     delay(2000);
-
 }
 
 
