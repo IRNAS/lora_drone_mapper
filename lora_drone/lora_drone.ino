@@ -79,7 +79,8 @@ void setup() {
   /* Init Lora */
   LORA_STREAM.begin(57600);
   delay(3000);
-  LoraP2P_Setup();
+  //LoraP2P_Setup();
+  ttn_setup();
   MySerial.println("Lora setup done.");
   
 }
@@ -141,14 +142,14 @@ void loop() {
     
       SerialUSB.println("TX done");
 
-      LoraP2P_Setup();
-      LORA_Write((char*)txBuffer);
-      SerialUSB.println("LORA TX done");
+//      LoraP2P_Setup();
+//      LORA_Write((char*)txBuffer);
+//      SerialUSB.println("LORA TX done");
 
-      /* Send data to TTN */
-      ttn_setup();
-      myLora.txBytes(txBuffer, sizeof(txBuffer));
-      SerialUSB.println("TTN TX done");
+//      /* Send data to TTN */
+//      ttn_setup();
+//      myLora.txBytes(txBuffer, sizeof(txBuffer));
+//      SerialUSB.println("TTN TX done");
    }
 }
 
@@ -200,7 +201,7 @@ void ttn_setup(void){
   }
   bool join_result = false;
   //ABP: initABP(String addr, String AppSKey, String NwkSKey);
-  join_result = myLora.initABP("26011AA1", "4B4D878F6DCE8E592169D2AA0D111EC6", "0172714C95D54A931C9C778DF5362DBD");
+  join_result = myLora.initABP("260112BD", "C506761E73443F5EC2D297A9BC34720F", "4D521F57E7E34C655457857D78AA5B6F");
 
 }
 
